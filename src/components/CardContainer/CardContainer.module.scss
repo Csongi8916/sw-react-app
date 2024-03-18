@@ -3,3 +3,22 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.paginationArea {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+
+  .paginastionBtn {
+    font-size: 23px;
+    color: white;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    border: none;
+  }
+
+  .paginastionBtn:hover {
+    transform: scale(1.1);
+  }
+}
