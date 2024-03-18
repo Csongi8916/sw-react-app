@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { fetchCharacters } from '../../http.js';
 import Card from '../Card/Card.jsx';
+import classes from './CardContainer.module.scss';
 
 function CardContainer() {
   const [isFetching, setIsFetching] = useState(false);
   const [characters, setCharacters] = useState([]);
   const [error, setError] = useState();
+
+  let imageId = 0;
 
   useEffect(() => {
     async function fetchPlaces() {
@@ -13,19 +16,16 @@ function CardContainer() {
 
       try {
         const availableCharacters = await fetchCharacters();
-        debugger;
-        // const availableCharacters = [{name: 'sad'}, {name: 'abc'}]
-        setIsFetching(false);
         setCharacters(availableCharacters);
       } catch (error) {
         setError({
           message:
             error.message || 'Could not fetch places, please try again later.',
         });
+      } finally {
         setIsFetching(false);
       }
     }
-
     fetchPlaces();
   }, []);
 
@@ -34,10 +34,9 @@ function CardContainer() {
   }
 
   return (
-    <section>
-      {console.log(characters)}
+    <section className={classes.flexContainer}>
       {characters.map((character) => (
-        <Card name={character.name} />
+        <Card name={character.name} imageId={++imageId} className={classes.swCard} />
       ))}
     </section>  
   );
