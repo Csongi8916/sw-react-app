@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchCharacters, fetchPlanet } from '../../http.js';
 import Card from '../Card/Card.jsx';
+import Spinner from '../Spinner/Spinner.jsx';
 import classes from './CardContainer.module.scss';
 
 function CardContainer() {
@@ -20,7 +21,6 @@ function CardContainer() {
           const planet = await fetchPlanet(character.homeworld);
           return { ...character, planet };
         }));
-        debugger;
         console.log(characters);
         setCharacters(characters);
       } catch (error) {
@@ -40,11 +40,17 @@ function CardContainer() {
   }
 
   return (
-    <section className={classes.flexContainer}>
-      {characters.map((character) => (
-        <Card character={character} imageId={++imageId} className={classes.swCard} />
-      ))}
-    </section>
+    <>
+      {isFetching ? (
+        <Spinner></Spinner>
+      ) : (
+      <section className={classes.flexContainer}>
+        {characters.map((character) => (
+          <Card character={character} imageId={++imageId} className={classes.swCard} />
+        ))}
+      </section>
+      )}
+    </>
   );
 }
 
