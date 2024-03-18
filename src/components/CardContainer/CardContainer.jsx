@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchCharacters } from '../../http.js';
+import { fetchCharacters, fetchPlanet } from '../../http.js';
 import Card from '../Card/Card.jsx';
 import classes from './CardContainer.module.scss';
 
@@ -16,7 +16,13 @@ function CardContainer() {
 
       try {
         const availableCharacters = await fetchCharacters();
-        setCharacters(availableCharacters);
+        const characters = await Promise.all(availableCharacters.map(async (character) => {
+          const planet = await fetchPlanet(character.homeworld);
+          return { ...character, planet };
+        }));
+        debugger;
+        console.log(characters);
+        setCharacters(characters);
       } catch (error) {
         setError({
           message:
@@ -36,9 +42,9 @@ function CardContainer() {
   return (
     <section className={classes.flexContainer}>
       {characters.map((character) => (
-        <Card name={character.name} imageId={++imageId} className={classes.swCard} />
+        <Card character={character} imageId={++imageId} className={classes.swCard} />
       ))}
-    </section>  
+    </section>
   );
 }
 
