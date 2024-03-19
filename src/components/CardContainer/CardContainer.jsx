@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { fetchCharacters, fetchPlanet } from '../../http.js';
+import { CharacterContext } from '../../store/character-context.jsx';
 import Card from '../Card/Card.jsx';
 import Spinner from '../Spinner/Spinner.jsx';
 import classes from './CardContainer.module.scss';
@@ -7,11 +8,11 @@ import nextBtnImg from '../../assets/next-ico.png';
 import prevBtnImg from '../../assets/prev-ico.png';
 
 function CardContainer() {
+  const { characters, addCharacters } = useContext(CharacterContext);
   const [isFetching, setIsFetching] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [hasPrevPage, setHasPrevPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [characters, setCharacters] = useState([]);
   const [error, setError] = useState();
 
   let imageId = 0;
@@ -23,11 +24,11 @@ function CardContainer() {
       try {
         const pageData = await fetchCharacters(currentPage);
         const rawCharacters = pageData.results;
-        const characters = await Promise.all(rawCharacters.map(async (character) => {
+        const readyCharacters = await Promise.all(rawCharacters.map(async (character) => {
           const planet = await fetchPlanet(character.homeworld);
           return { ...character, planet };
         }));
-        setCharacters(characters);
+        addCharacters(readyCharacters);
         setHasNextPage(pageData.next ? true : false);
         setHasPrevPage(pageData.previous ? true : false);
       } catch (error) {
