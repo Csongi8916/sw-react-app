@@ -44,7 +44,7 @@ function CardContainer() {
 
   const handleNextCharacter = () => {
     if (!hasNextPage) {
-      alert('There is not other previous pages!');
+      alert('There is not other next pages!');
       return;
     }
     setCurrentPage(currentPage + 1);
@@ -59,10 +59,6 @@ function CardContainer() {
   }
 
   if (error) {
-    if (!hasNextPage) {
-      alert('There is not other next pages!');
-      return;
-    }
     return <Error title="An error occurred!" message={error.message} />;
   }
 
