@@ -8,24 +8,28 @@ import prevBtnImg from '../../assets/prev-ico.png';
 
 function CardContainer() {
   const [isFetching, setIsFetching] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [hasPrevPage, setHasPrevPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [characters, setCharacters] = useState([]);
   const [error, setError] = useState();
 
   let imageId = 0;
-  let pageIndex = 0;
 
   useEffect(() => {
     async function fetchPlaces() {
       setIsFetching(true);
 
       try {
-        const availableCharacters = await fetchCharacters(currentPage);
-        const characters = await Promise.all(availableCharacters.map(async (character) => {
+        const pageData = await fetchCharacters(currentPage);
+        const rawCharacters = pageData.results;
+        const characters = await Promise.all(rawCharacters.map(async (character) => {
           const planet = await fetchPlanet(character.homeworld);
           return { ...character, planet };
         }));
         setCharacters(characters);
+        setHasNextPage(pageData.next ? true : false);
+        setHasPrevPage(pageData.previous ? true : false);
       } catch (error) {
         setError({
           message:
@@ -39,11 +43,15 @@ function CardContainer() {
   }, [currentPage]);
 
   const handleNextCharacter = () => {
+    if (!hasNextPage) {
+      alert('There is not other previous pages!');
+      return;
+    }
     setCurrentPage(currentPage + 1);
   }
 
   const handlePrevCharacter = () => {
-    if (currentPage === 1) {
+    if (!hasPrevPage) {
       alert('There is not other previous pages!');
       return;
     }
@@ -51,6 +59,10 @@ function CardContainer() {
   }
 
   if (error) {
+    if (!hasNextPage) {
+      alert('There is not other next pages!');
+      return;
+    }
     return <Error title="An error occurred!" message={error.message} />;
   }
 

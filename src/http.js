@@ -4,7 +4,7 @@ export async function fetchCharacters(pageIndex) {
   if (!response.ok) {
     throw new Error('Failed to fetch characters');
   }
-  return resData.results;
+  return resData;
 }
 
 export async function fetchPlanets() {
