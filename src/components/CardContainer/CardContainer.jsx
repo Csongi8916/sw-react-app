@@ -78,7 +78,7 @@ function CardContainer() {
         </div>
         <div className={classes.paginationArea}>
           <button className={classes.paginastionBtn} onClick={handlePrevCharacter}>
-            <img src={prevBtnImg} alt="Next" />
+            <img src={prevBtnImg} alt="Previous" />
           </button>
           <button className={classes.paginastionBtn} onClick={handleNextCharacter}>
             <img src={nextBtnImg} alt="Next" />
