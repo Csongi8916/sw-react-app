@@ -24,3 +24,12 @@ export async function fetchPlanet(url) {
   }
   return resData;
 }
+
+export async function fetchFilms() {
+  const response = await fetch('https://swapi.dev/api/films/');
+  const resData = await response.json();
+  if (!response.ok) {
+    throw new Error('Failed to fetch characters');
+  }
+  return resData.results;
+}
