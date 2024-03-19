@@ -7,7 +7,6 @@ export const CharacterContext = createContext({
 });
 
 function characterReducer(state, action) {
-  debugger;
   if (action.type === 'ADD_CHARACTERS') {
     const newCharacters = action.payload;
     return {
@@ -17,6 +16,16 @@ function characterReducer(state, action) {
   }
 
   if (action.type === 'FILTER_CHARACTERS') {
+    const characters = [...state.characters];
+    const neededChars = action.payload.toLowerCase();
+    const filteredCharacters = characters.map((character) => {
+      character.filtered = character.name.toLowerCase().includes(neededChars) ? true : false;
+      return character;
+    });
+    return {
+      ...state,
+      characters: filteredCharacters,
+    };
   }
 
   return state;
@@ -37,10 +46,10 @@ export default function CharacterContextProvider({ children }) {
     });
   }
 
-  function handleFilterCharacters(filteredCharacters) {
+  function handleFilterCharacters(nameFilter) {
     characterDispatch({
       type: 'FILTER_CHARACTERS',
-      payload: filteredCharacters,
+      payload: nameFilter,
     });
   } 
 

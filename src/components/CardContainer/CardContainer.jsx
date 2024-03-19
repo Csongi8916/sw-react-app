@@ -28,6 +28,7 @@ function CardContainer() {
           const planet = await fetchPlanet(character.homeworld);
           return { ...character, planet };
         }));
+        readyCharacters.forEach(c => c.filtered = true);
         addCharacters(readyCharacters);
         setHasNextPage(pageData.next ? true : false);
         setHasPrevPage(pageData.previous ? true : false);
@@ -71,7 +72,9 @@ function CardContainer() {
       <>
         <section className={classes.flexContainer}>
           {characters.map((character) => (
-            <Card character={character} imageId={++imageId} className={classes.swCard} />
+            character.filtered
+            ? <Card character={character} imageId={++imageId} className={classes.swCard} />
+            : ''
           ))}
         </section>
         <div style={{ display: 'flex', justifyContent: 'center'}}>
